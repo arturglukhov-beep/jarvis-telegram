@@ -14,3 +14,4 @@ Ruling: Живые запросы к модели и Telegram не выполн�
 
 Task 1: complete — конфигурация, whitelist памяти, даты Камчатки, атомарное состояние; node --test tests/config.test.js: 6/6.
 Task 2: complete — JSONL RPC, split UTF8, concurrent responses, process exit, timeout, invalid JSON: 9/9 tests. Исправлен тестовый сервер: две JSON-строки нельзя перемешивать внутри одного фрейма; тест разделён на фрагментацию и параллельные запросы.
+Task 3: complete — Codex thread start/resume, final messages, failed turns, process crash, cancellation and persisted sessions: 15/15 tests. Ruling: /stop закрывает только принадлежащий запросу процесс App Server; это надёжнее гонки turn/interrupt в момент старта. История остаётся на диске Codex, повторная отправка действий отключена.
