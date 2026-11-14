@@ -4,7 +4,7 @@ const root=mkdtempSync(join(base,'probe-'));const allowed=join(root,'allowed');c
 for(const dir of[allowed,blocked,home])mkdirSync(dir,{mode:0o700});
 writeFileSync(join(allowed,'input.txt'),'allowed-test');writeFileSync(join(blocked,'private.txt'),'fake-secret-for-sandbox-test');symlinkSync(join(blocked,'private.txt'),join(allowed,'escape.txt'));
 writeFileSync(join(allowed,'.jarvis-root'),'');
-const config=`default_permissions = "probe"\nproject_root_markers = [".jarvis-root"]\n[permissions.probe.filesystem]\n":minimal" = "read"\n${JSON.stringify(allowed)} = "write"\n[permissions.probe.network]\nenabled = false\n`;
+const config=`default_permissions = "probe"\nproject_root_markers = [".jarvis-root"]\n[permissions.probe.filesystem]\n":minimal" = "read"\n"/home/agent/.local/bin/jarvis-codex" = "read"\n${JSON.stringify(allowed)} = "write"\n[permissions.probe.network]\nenabled = false\n`;
 writeFileSync(join(home,'config.toml'),config,{mode:0o600});
 const code=`import json,socket,pathlib\na=pathlib.Path(${JSON.stringify(allowed)})\nb=pathlib.Path(${JSON.stringify(blocked)})\nr={}\nr['allowed_read']=a.joinpath('input.txt').read_text()=='allowed-test'\na.joinpath('output.txt').write_text('ok')\nr['allowed_write']=True\nfor key,fn in [('blocked_read',lambda:b.joinpath('private.txt').read_text()),('blocked_write',lambda:b.joinpath('new.txt').write_text('bad')),('symlink_escape',lambda:a.joinpath('escape.txt').read_text()),('network',lambda:socket.create_connection(('1.1.1.1',80),timeout=2))]:\n try:fn();r[key]=False\n except (PermissionError,OSError):r[key]=True\nprint(json.dumps(r))\n`;
 const env={PATH:process.env.PATH,HOME:process.env.HOME,CODEX_HOME:home};

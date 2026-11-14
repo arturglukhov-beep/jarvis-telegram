@@ -14,12 +14,12 @@ test('model file proposal requires owner callback; foreign and repeated callback
  const f=fixture({kind:'write_file',path:'demo/file.txt',content:'Test content'});await f.app.bot.handleUpdate(msg(1,'Создай файл'));await f.app.drain();assert.equal(existsSync(join(f.root,'demo/file.txt')),false);
  const button=f.sent.find(x=>x.body.reply_markup)?.body.reply_markup.inline_keyboard[0][0].callback_data;assert.ok(button);
  await f.app.bot.handleUpdate(callback(2,button,456));assert.equal(existsSync(join(f.root,'demo/file.txt')),false);
- await f.app.bot.handleUpdate(callback(3,button));assert.equal(readFileSync(join(f.root,'demo/file.txt'),'utf8'),'Test content');
+ await f.app.bot.handleUpdate(callback(3,button));await f.app.drain();assert.equal(readFileSync(join(f.root,'demo/file.txt'),'utf8'),'Test content');
  await f.app.bot.handleUpdate(callback(4,button));assert.equal(f.sent.filter(x=>x.method==='sendDocument').length,1);
 });
 test('reminder stays absent until its exact text and time are confirmed',async()=>{
  const f=fixture({kind:'reminder',text:'Позвонить',at:new Date(Date.now()+3600000).toISOString()});await f.app.bot.handleUpdate(msg(1,'Напомни'));await f.app.drain();assert.equal(f.reminders.list().length,0);
- const button=f.sent.find(x=>x.body.reply_markup)?.body.reply_markup.inline_keyboard[0][0].callback_data;await f.app.bot.handleUpdate(callback(2,button));assert.equal(f.reminders.list().length,1);
+ const button=f.sent.find(x=>x.body.reply_markup)?.body.reply_markup.inline_keyboard[0][0].callback_data;await f.app.bot.handleUpdate(callback(2,button));await f.app.drain();assert.equal(f.reminders.list().length,1);
 });
 test('confirmation visibly identifies its file and references the exact preview',async()=>{
  const f=fixture({kind:'write_file',path:'demo/identity.txt',content:'Approved content'});await f.app.bot.handleUpdate(msg(1,'Создай файл'));await f.app.drain();

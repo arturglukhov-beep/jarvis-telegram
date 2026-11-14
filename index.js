@@ -10,8 +10,12 @@ import { ScopedFiles } from './lib/files.js';
 import { Reminders } from './lib/reminders.js';
 import { ActionController } from './lib/actions.js';
 import { Media } from './lib/media.js';
+import { Commands } from './lib/commands.js';
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+const runFile=promisify(execFile);
 async function main() {
   loadSecrets(); const config=loadConfig(); const report=validateConfig(config);
   if(!report.ok) {console.error(report.errors.join('\n'));process.exitCode=1;return;}
@@ -26,7 +30,11 @@ async function main() {
     const projects=join(config.home,'projects');mkdirSync(projects,{recursive:true,mode:0o700});
     const files=new ScopedFiles(projects,join(config.dataDir,'backups'));
     const reminders=new Reminders(config.dataDir);reminders.recover();
-    const actions=new ActionController(files,reminders);
+    mkdirSync(join(projects,'command-playground'),{recursive:true,mode:0o700});
+    await runFile('/usr/bin/python3',[join(import.meta.dirname,'scripts/install-command-runtime.py')],{env:{PATH:process.env.PATH,HOME:process.env.HOME},timeout:30000,maxBuffer:10000});
+    if(controller.signal.aborted)return;
+    const commands=new Commands({projectsRoot:projects,dataDir:config.dataDir});
+    const actions=new ActionController(files,reminders,commands);
     const media=new Media(config,{getFile:(...args)=>app.bot.api.getFile(...args)});
     app=createTelegram(config,store,service,()=>loadMemory(config.home),{},controller.signal,{actions,media});
     await verifyBot(app.bot,config.expectedBot,controller.signal);
