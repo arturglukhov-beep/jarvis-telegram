@@ -50,3 +50,12 @@ test('queued attachment preparation is cancelled by /stop before model execution
  const pending=service.submit('123','',{prepare:signal=>new Promise((resolve,reject)=>{signal.addEventListener('abort',()=>reject(new Error('Запрос остановлен')),{once:true});})});
  setTimeout(()=>service.stop(),20);await assert.rejects(pending,/останов/);assert.equal(runs,0);
 });
+test('a resumed legacy dialog receives the current capabilities before its next turn',async()=>{
+ const b=new CodexBackend({enhanced:true},()=>new RpcClient({command:process.execPath,args:['tests/fixtures/app-server.mjs'],timeout:2000}));
+ const result=await b.run({prompt:'policy-refresh',threadId:'legacy-thread'});const reply=JSON.parse(result.text);
+ assert.equal(result.threadId,'legacy-thread');assert.equal(reply.actions[0]?.kind,'command');assert.deepEqual(reply.actions[0].argv,['python3','--version']);
+});
+test('failed policy injection stops before producing an answer with stale capabilities',async()=>{
+ const b=new CodexBackend({enhanced:true},()=>new RpcClient({command:process.execPath,args:['tests/fixtures/app-server.mjs'],timeout:2000}));
+ await assert.rejects(b.run({prompt:'policy-refresh',threadId:'inject-failure'}),/Codex/);
+});

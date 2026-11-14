@@ -74,3 +74,10 @@ Deferred minors: нет; замечание о больших файлах пе�
 - Deferred minors: нет; найденная проблема quotas включена в fix pass как operational Important.
 
 Включение v0.3.0: cb4152b; приватные snapshots state/reminders, активных напоминаний0, restart прошёл. Preflight подтверждён по PID нового процесса, active/running NRestarts0; Commands.ready=true, owner/session сохранены, npm run check ok=true. Осталась пользовательская приёмка: запросить в Telegram python3 --version и подтвердить точный preview. Исходная универсальная legacy-реализация всех возможностей не объявляется выполненной: ограничения копии, зависимостей и административных действий остаются.
+
+## Исправление v0.3.1: старые инструкции при resume
+- Артур прислал отказ бота на python3 --version. Проверка реального rollout показала initial developer «Это текстовый режим», ни одной новой инструкции command; JSON корректен, actions пустой. Ошибка выше sandbox и UI.
+- Установленная версия CLI не применяет новые developerInstructions к старой истории при resume. Явный thread/inject_items developer message принят реальным API. Первичная metadata-проверка с resume синтетического thread без turn завершилась ошибкой; корректный probe start→inject принят без inference.
+- Backend добавляет текущую доверенную policy перед turn/start при cold resume/изменении policy; Map обновляется только после успешного RPC, ID/история не меняются, injection failure прерывает turn.
+- 2 regression-теста RED→GREEN; fake server моделирует сохранение старой policy при resume. Полный набор 78JS+3Python зелёный. Независимое ревью: Critical/Important нет.
+- Реальная проверка на fork настоящего старого диалога через ChatGPT auth вернула command argv=[python3,--version], actions1. Исходный owner thread не изменялся, команда не выполнялась, Telegram не отправлялся.
