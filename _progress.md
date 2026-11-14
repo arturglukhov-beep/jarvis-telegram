@@ -1,5 +1,14 @@
 # Подготовка Telegram Jarvis
 
+## Проверка скиллов 15.11.2026
+- Причина: isolated CODEX_HOME и отключённые native readers не получают /home/agent/skills; память содержит только названия.
+- План: безопасный каталог SKILL.md и внутреннее чтение инструкций по запросу модели; /skills без inference; регрессионные тесты, ревью, проверка старого thread и restart.
+- Не включать произвольный filesystem, shell, внешние сервисы или платные API ради загрузки инструкций. Отсутствующие reminder/server-setup не выдавать за установленные.
+- Каталог38:22 проектных+system+15Superpowers7.0.1. Custom content-creator имеет приоритет над global. Три прежних файла без YAML тоже включены.
+- 5 regression-тестов RED→GREEN: discovery/dedup, legacy Markdown, загрузка в resumed thread, отказ неизвестного имени, symlink/path/size/change checks. /skills через настоящий router на синтетических updates: owner only, inference0.
+- Живой fork настоящего owner thread: модель увидела38, загрузила discovery-interview (подтверждён фактический вызов reader), задала вопрос по задаче; actions0, основной thread не изменён. Независимое ревью: Critical/Important нет.
+- Ограничения: связанные reference-файлы/скрипты автоматически не загружаются, max3rounds/9skills/192KB, native tools по-прежнему выключены. Исправлена устаревшая text-only подсказка привязки.
+
 План: /home/agent/projects/tgbotdorabotka/PLAN.md
 
 - [x] Конфигурация, секреты и память

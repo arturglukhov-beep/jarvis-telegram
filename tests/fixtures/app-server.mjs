@@ -1,5 +1,5 @@
 import readline from 'node:readline';
-let seq = 0; let turn = null;let currentPolicy=false;
+let seq = 0; let turn = null;let currentPolicy=false;let skillPolicy='';
 const send = obj => process.stdout.write(JSON.stringify(obj)+'\n');
 readline.createInterface({ input: process.stdin }).on('line', line => {
   const m = JSON.parse(line);
@@ -17,6 +17,7 @@ readline.createInterface({ input: process.stdin }).on('line', line => {
   if (m.method === 'thread/resume') { send({id:m.id,result:{thread:{id:m.params.threadId}}}); return; }
   if (m.method === 'thread/inject_items') {
     if(m.params.threadId==='inject-failure'){send({id:m.id,error:{code:-32000,message:'Policy injection rejected'}});return;}
+    skillPolicy=m.params.items.flatMap(x=>x.content||[]).map(x=>x.text||'').join('\n');
     currentPolicy=m.params.items.some(x=>x.role==='developer'&&x.content?.some(c=>c.text?.includes('Можно предлагать command')));send({id:m.id,result:{}});return;
   }
   if (m.method === 'turn/start') {
@@ -25,6 +26,12 @@ readline.createInterface({ input: process.stdin }).on('line', line => {
     turn={id:'turn-'+(++seq),threadId:m.params.threadId};
     send({id:m.id,result:{turn:{id:turn.id,status:'inProgress'}}});
     const current=turn;
+    if(text.includes('skills-probe')||text.includes('Продолжите исходную задачу')){
+      const loaded=skillPolicy.includes('MAGIC_INTERVIEW_RULE');
+      const action={kind:'load_skill',path:'discovery-interview',content:null,text:null,at:null,daily:null,id:null,argv:[],cwd:null};
+      const answer=JSON.stringify({text:loaded?'Какую проблему решает Ваш проект?':'',actions:loaded?[]:[action]});
+      setTimeout(()=>{send({method:'item/completed',params:{threadId:current.threadId,turnId:current.id,item:{id:'skill-msg',type:'agentMessage',text:answer}}});send({method:'turn/completed',params:{threadId:current.threadId,turn:{id:current.id,status:'completed'}}});},20);return;
+    }
     if (text.includes('approval')) send({id:'approval',method:'item/commandExecution/requestApproval',params:{threadId:current.threadId,turnId:current.id,command:'rm -rf /'}});
     setTimeout(()=>{
       if (turn !== current) return;
