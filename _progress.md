@@ -8,6 +8,7 @@
 - 5 regression-тестов RED→GREEN: discovery/dedup, legacy Markdown, загрузка в resumed thread, отказ неизвестного имени, symlink/path/size/change checks. /skills через настоящий router на синтетических updates: owner only, inference0.
 - Живой fork настоящего owner thread: модель увидела38, загрузила discovery-interview (подтверждён фактический вызов reader), задала вопрос по задаче; actions0, основной thread не изменён. Независимое ревью: Critical/Important нет.
 - Ограничения: связанные reference-файлы/скрипты автоматически не загружаются, max3rounds/9skills/192KB, native tools по-прежнему выключены. Исправлена устаревшая text-only подсказка привязки.
+- Выпуск v0.3.2, e730514: полный набор83JS+3Python успешен, конфигурация ok. Приватный snapshot state/reminders перед restart; user service перезапущен. /skills проверен на синтетических Telegram updates без сетевых сообщений; приёмка владельцем возможна в текущем диалоге.
 
 План: /home/agent/projects/tgbotdorabotka/PLAN.md
 
