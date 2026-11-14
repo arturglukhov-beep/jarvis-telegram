@@ -13,3 +13,4 @@ Ruling: При неисправной изоляции первая версия
 Ruling: Живые запросы к модели и Telegram не выполнять до ввода владельцем секрета и следующего шага подключения.
 
 Task 1: complete — конфигурация, whitelist памяти, даты Камчатки, атомарное состояние; node --test tests/config.test.js: 6/6.
+Task 2: complete — JSONL RPC, split UTF8, concurrent responses, process exit, timeout, invalid JSON: 9/9 tests. Исправлен тестовый сервер: две JSON-строки нельзя перемешивать внутри одного фрейма; тест разделён на фрагментацию и параллельные запросы.
