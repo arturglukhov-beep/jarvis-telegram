@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {spawnSync}from'node:child_process';
 import assert from 'node:assert/strict';
 import {mkdtempSync,mkdirSync,writeFileSync,readFileSync,symlinkSync,linkSync} from 'node:fs';
 import {join} from 'node:path';
@@ -30,4 +31,11 @@ test('approval binds owner, chat, expiry and one-time execution',()=>{
  assert.throws(()=>a.take(id,'456','123'));assert.throws(()=>a.take(id,'123','456'));
  assert.equal(a.take(id,'123','123').type,'write');assert.throws(()=>a.take(id,'123','123'));
  const expired=a.create('123','123',{});now=301000;assert.throws(()=>a.take(expired,'123','123'));
+});
+test('a FIFO with a text extension is rejected without blocking the process',()=>{
+ const root=fresh();const fifo=join(root,'pipe.txt');
+ const made=spawnSync('/usr/bin/mkfifo',[fifo]);assert.equal(made.status,0);
+ const code=`import {ScopedFiles} from './lib/files.js';try{new ScopedFiles(process.argv[1],process.argv[2]).prepare('pipe.txt','data');process.exit(2);}catch{process.exit(0);}`;
+ const result=spawnSync(process.execPath,['--input-type=module','-e',code,root,fresh()],{timeout:1000});
+ assert.equal(result.error?.code,undefined);assert.equal(result.status,0);
 });

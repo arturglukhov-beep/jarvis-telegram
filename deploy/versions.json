@@ -6,5 +6,9 @@
   "codex": {
     "path": "/home/agent/.local/bin/jarvis-codex",
     "sha256": "c147ac3b289a23d0ecfeef646be5dd2b0cc892bf78f0b215311dc6ad6e85b33e"
+  },
+  "bwrap": {
+    "path": "/home/agent/.local/bin/codex-resources/bwrap",
+    "sha256": "15fd5f2673d2e1c2f80e34e5108462fd014f5e8bbc7b0731f1ab23d1ff1ac140"
   }
 }

@@ -43,3 +43,18 @@ Deferred minors: нет замечаний, отложенных по итога
 - [ ] Telegram/Codex интеграция, тесты, ревью, запуск.
 
 Расширение, шаги 1–3: восстановлен bundled bwrap, подготовлены проверенный AppArmor profile и sudo-установщик (не применены). Добавлены ScopedFiles через O_NOFOLLOW/descriptors и backup, одноразовые Approvals, сохраняемые Reminders с unknown/missed/cancelled. Общая проверка: 46/46 JS; исходная служба пока работает без перезапуска.
+
+Расширение, итог до включения v0.2.0:
+- ScopedFiles/Approvals/Reminders, документы/изображения и локальный faster-whisper интегрированы в Telegram. Голос — запрос владельца с подтверждением действий; документы/картинки — недоверенные данные.
+- Реальный структурированный turn проверен через ChatGPT auth, без Telegram-доставки и отдельного платного API. Локальный распознаватель проверен на публичном JFK sample; PDF и фактическая длина аудио проверены Python-тестами.
+- Независимое ревью: 3 Important (FIFO блокирует open, cancel возобновляется после send, одинаковые кнопки разных previews), 1 Minor (полное чтение молча обрезается). Последнее переклассифицировано Important: владелец не должен принимать частичный файл за полный результат.
+- Final: fixed FIFO and bounded read — test RED→GREEN; O_NONBLOCK, fstat regular-file, max 128001 bytes.
+- Final: fixed cancel/send race — success/failure regression test RED→GREEN; cancelled не перезаписывается.
+- Final: fixed preview/button ambiguity — test RED→GREEN; unique ID, exact reply_parameters, description and serialized reply delivery.
+- Final: fixed full read delivery — test RED→GREEN; полный файл прикрепляется, inline preview обозначен сокращённым.
+- Проверки: npm test 62 JS + 3 Python успешно; npm audit 0; JS/Python syntax и AppArmor profile parser успешно. Повторный sandbox selftest с NoNewPrivileges: blocked bwrap RTM_NEWADDR, ready=false.
+- Ruling: произвольные команды Linux остаются выключены. Root-исправление готово как точечный профиль bubblewrap, требует sudo владельца. После него обязательны selftest и отдельная проверка подключения shell, автоматического включения нет.
+- Ruling: чтение и изменение файлов доступны через ограниченный контроллер и явное подтверждение, без нативного shell; цена — работа только в разрешённых проектах и лимиты размера. Сам бот и секреты исключены.
+- Ruling: голос распознаётся локально base/int8 на CPU; платный API не добавлен; цена — лимит 2 минуты и время обработки на CPU.
+- Ruling: напоминания только владельцу, неизвестная доставка не повторяется, пропущенные после простоя помечаются missed; цена — иногда нужен ручной повтор вместо риска дубля.
+Deferred minors: нет; замечание о больших файлах переклассифицировано и исправлено.

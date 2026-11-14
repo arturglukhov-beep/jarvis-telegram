@@ -19,3 +19,10 @@ test('past tasks missed during downtime are marked missed and cancellation retai
  const now=Date.now();const r=new Reminders(fresh());const t=r.add({text:'Срок',at:new Date(now+1000).toISOString()},now);
  r.recover(now+120000);let sent=0;await r.tick(now+120000,async()=>sent++);assert.equal(sent,0);assert.equal(r.list()[0].status,'missed');r.cancel(t.id);assert.equal(r.list()[0].status,'cancelled');
 });
+test('cancelling a reminder during successful or failed delivery cannot revive it',async()=>{
+ for(const fail of[false,true]){
+  const now=Date.parse('2026-11-14T12:59:00Z');const r=new Reminders(fresh());const task=r.add({text:'Отменить',daily:'01:00'},now);let release;const wait=new Promise(resolve=>release=resolve);
+  const tick=r.tick(now+60000,async()=>{await wait;if(fail)throw new Error('network');});
+  r.cancel(task.id);release();await tick;assert.equal(r.list()[0].status,'cancelled');let sent=0;await r.tick(now+86460000,async()=>sent++);assert.equal(sent,0);
+ }
+});

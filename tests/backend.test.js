@@ -44,3 +44,9 @@ test('stop cancels queued work and new dialog preserves old history in Codex', a
   const r=await service.submit('123','next'); assert.equal(r.text,'Ответ Jarvis');
   service.newDialog('123'); assert.equal(store.session('123'),null);
 });
+test('queued attachment preparation is cancelled by /stop before model execution',async()=>{
+ const store=new StateStore(mkdtempSync(join(tmpdir(),'jarvis-prep-')));let runs=0;
+ const service=new AgentService({run:async()=>{runs++;return{text:'unexpected'};}},store);
+ const pending=service.submit('123','',{prepare:signal=>new Promise((resolve,reject)=>{signal.addEventListener('abort',()=>reject(new Error('Запрос остановлен')),{once:true});})});
+ setTimeout(()=>service.stop(),20);await assert.rejects(pending,/останов/);assert.equal(runs,0);
+});
