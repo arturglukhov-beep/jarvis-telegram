@@ -81,3 +81,5 @@ Deferred minors: нет; замечание о больших файлах пе�
 - Backend добавляет текущую доверенную policy перед turn/start при cold resume/изменении policy; Map обновляется только после успешного RPC, ID/история не меняются, injection failure прерывает turn.
 - 2 regression-теста RED→GREEN; fake server моделирует сохранение старой policy при resume. Полный набор 78JS+3Python зелёный. Независимое ревью: Critical/Important нет.
 - Реальная проверка на fork настоящего старого диалога через ChatGPT auth вернула command argv=[python3,--version], actions1. Исходный owner thread не изменялся, команда не выполнялась, Telegram не отправлялся.
+
+Приёмка владельцем 15.11.2026: Артур прислал успешный результат команды python3 --version через Telegram — exit0, Python3.12.3. Запрос, подтверждение и выполнение в исходном сохранённом диалоге подтверждены. Ошибка stale policy закрыта. Ограничения изолированной копии/подтверждений сохраняются.
