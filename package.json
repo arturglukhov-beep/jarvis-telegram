@@ -1,0 +1,1 @@
+{"name":"jarvis-telegram","version":"0.1.0","private":true,"type":"module","scripts":{"start":"node index.js","test":"node --test tests/*.test.js","check":"node scripts/check-config.js --offline","setup":"node scripts/setup.js"},"engines":{"node":">=24 <25"}}
