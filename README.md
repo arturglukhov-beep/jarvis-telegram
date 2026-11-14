@@ -45,6 +45,8 @@ npm run metadata
 
 ## Автозапуск после проверки в личном чате
 
+На текущем сервере 14.11.2026 запущена пользовательская служба из `deploy/jarvis-telegram.user.service`. Она подключена к default.target пользователя agent; Linger=yes позволяет работать после выхода. Управление: `systemctl --user status jarvis-telegram.service`, `systemctl --user restart jarvis-telegram.service`, `systemctl --user stop jarvis-telegram.service`. Пользовательская версия не включает требующие административных прав настройки файловых namespace из системного шаблона; ограничения инструментов Codex сохраняются.
+
 Шаблон deploy/jarvis-telegram.service подготовлен для системного systemd. Установку выполняет администратор после проверки токена и остановки ручного процесса:
 
 ```bash
@@ -54,7 +56,7 @@ sudo systemctl enable --now jarvis-telegram.service
 sudo systemctl status jarvis-telegram.service --no-pager
 ```
 
-В этой подготовке служба не устанавливалась и не запускалась. Для остановки: `sudo systemctl stop jarvis-telegram.service`. Не запускать второй polling-процесс с тем же ботом на другом сервере.
+Системная версия службы не устанавливалась; на текущем сервере используется пользовательская версия, описанная выше. Не устанавливать обе одновременно. Для остановки системной версии: `sudo systemctl stop jarvis-telegram.service`. Не запускать второй polling-процесс с тем же ботом на другом сервере.
 
 ## Ошибки и восстановление
 

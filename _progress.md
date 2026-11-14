@@ -30,3 +30,5 @@ Deferred minors: нет замечаний, отложенных по итога
 
 Итог подготовки: npm test — 37/37 JavaScript и 1/1 Python; npm audit --omit=dev — 0 vulnerabilities; node --check — 21 файл; Python syntax и systemd-analyze verify — успешно. Реальный metadata-check подтверждает авторизованный аккаунт, но ожидаемо возвращает exit 1 до ввода BOT_TOKEN и OWNER_ID/PAIRING_HASH. Live turn и Telegram не запускались.
 Статус: подготовка текстовой программы завершена; подключение и запуск ожидают локального ввода токена владельцем. _progress.md сохранён как журнал, поскольку удаление без подтверждения запрещено.
+
+14.11.2026 — Артур локально сохранил токен и получил код привязки. npm run check: ok=true. Telegram getMe подтвердил bestsled1126_bot, webhook отсутствует. Запущена пользовательская systemd-служба jarvis-telegram.service (Linger=yes), startup preflight успешен, active/running, NRestarts=0. Системный sudo недоступен без пароля, поэтому использована пользовательская служба без привилегированных namespace-параметров. Осталось: Артуру отправить боту одноразовую /start-команду из терминала и проверить первый ответ Codex. Значения секрета и кода в файлы памяти не копировались.
