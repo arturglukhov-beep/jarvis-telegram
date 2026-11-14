@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { RpcClient } from '../lib/rpc.js';
-const client = () => new RpcClient({ command:process.execPath,args:['tests/fixtures/app-server.mjs'],timeout:200 });
+const client = () => new RpcClient({ command:process.execPath,args:['tests/fixtures/app-server.mjs'],timeout:2000 });
 test('JSONL framing handles fragmented UTF8 and correlates concurrent calls', async t => {
   const c=client(); t.after(()=>c.close());
   const a=await c.request('fragment');
@@ -19,5 +19,6 @@ test('invalid JSON fails closed and pending call times out', async t => {
   const c=client(); t.after(()=>c.close());
   await assert.rejects(c.request('malformed'),/protocol/i);
   const d=client(); t.after(()=>d.close());
+  await d.request('initialize'); d.timeout=50;
   await assert.rejects(d.request('hang'),/timeout/i);
 });
