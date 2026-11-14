@@ -1,0 +1,29 @@
+[Unit]
+Description=Jarvis private Telegram interface for Codex
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=agent
+Group=agent
+WorkingDirectory=/home/agent/projects/jarvis-telegram
+Environment=PATH=/home/agent/.local/bin:/usr/local/bin:/usr/bin:/bin
+EnvironmentFile=/home/agent/.config/jarvis-telegram/env
+ExecStart=/home/agent/.local/opt/node-v24.22.3-linux-x64/bin/node /home/agent/projects/jarvis-telegram/index.js
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=45
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/agent/.local/share/jarvis-telegram
+ReadWritePaths=/home/agent/.codex
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target

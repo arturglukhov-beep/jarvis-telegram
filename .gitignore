@@ -4,3 +4,4 @@ runtime/
 .env
 *.log
 .superpowers/
+__pycache__/

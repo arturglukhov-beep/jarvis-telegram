@@ -1,0 +1,10 @@
+{
+  "node": {
+    "path": "/home/agent/.local/opt/node-v24.22.3-linux-x64/bin/node",
+    "sha256": "a7ec1b37e6ff9d187e4198c5b6df9a4eb1c74dd31804fb3bac55cc4ceca1ac01"
+  },
+  "codex": {
+    "path": "/home/agent/.local/bin/jarvis-codex",
+    "sha256": "c147ac3b289a23d0ecfeef646be5dd2b0cc892bf78f0b215311dc6ad6e85b33e"
+  }
+}
