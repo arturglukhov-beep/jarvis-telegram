@@ -1,0 +1,7 @@
+# Exact application exception for Ubuntu's unprivileged user namespace restriction.
+# AppArmor and all other application profiles remain enabled.
+abi <abi/4.0>,
+include <tunables/global>
+profile jarvis-bwrap /home/agent/.local/bin/codex-resources/bwrap flags=(unconfined) {
+  userns,
+}

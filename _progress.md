@@ -41,3 +41,5 @@ Deferred minors: нет замечаний, отложенных по итога
 - [ ] Напоминания.
 - [ ] Вложения и локальный голос.
 - [ ] Telegram/Codex интеграция, тесты, ревью, запуск.
+
+Расширение, шаги 1–3: восстановлен bundled bwrap, подготовлены проверенный AppArmor profile и sudo-установщик (не применены). Добавлены ScopedFiles через O_NOFOLLOW/descriptors и backup, одноразовые Approvals, сохраняемые Reminders с unknown/missed/cancelled. Общая проверка: 46/46 JS; исходная служба пока работает без перезапуска.
